@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+        }
+
+        #game {
+            width: 100vw;
+            height: 100vh;
+            background: url(./456.jpg);
+            background-size: cover;
+            cursor: url(./mouse1.png) 50 50, auto;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #game:active {
+            cursor: url(./mouse2.png) 50 50, auto;
+        }
+
+        #game>img {
+            position: absolute;
+            width: 160px;
+        }
+
+        #btn-start {
+            position: absolute;
+            left: 50%;
+            bottom: 1%;
+            transform: translate(-50%);
+            width: 120px;
+            height: 110px;
+            outline: none;
+            /* background: url(./start.png); */
+            background-size: cover;
+        }
+
+
+        #btn-start:active {
+            bottom: 0%;
+        }
+
+        .ab_center {
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            font-size: 36px;
+            font-weight: bold;
+            position: absolute;
+            color: rgb(255, 255, 255);
+            left: 50.1%;
+            top: 2.5%;
+            transform: translate(-50.1%);
+            text-shadow: 0px 0px 3px #333;
+        }
+
+        #read {
+            color: rgb(9, 255, 0);
+            text-align: center;
+            text-shadow: 0 0 0 3px brown;
+            font-family: 微軟正黑體;
+            font-size: 18px;
+        }
+
+        .m1 {
+            width: 150px;
+            height: 150px;
+            background: url(./monster1.png);
+            background-size: cover;
+        }
+
+        .m2 {
+            width: 150px;
+            height: 150px;
+            background: url(./monster2.png);
+            background-size: cover;
+        }
+
+        .m3 {
+            width: 150px;
+            height: 150px;
+            background: url(./monster3.png);
+            background-size: cover;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="game">
+        <div class="ab_center">
+            <p>Score: <span id="text-score">0</span></p>
+            <p>Time: <span id="text-time">30</span></p>
+        </div>
+        <input type="image" img src="./start.png" value="" id="btn-start">
+        <table border="1" id="read">
+            <tr class="hole">
+                <td>圖示</td>
+                <td class="m1"></td>
+                <td class="m2"></td>
+                <td class="m3"></td>
+            </tr>
+            <tr class="hole">
+                <td>分數</td>
+                <td>+1</td>
+                <td>+2</td>
+                <td>-1</td>
+            </tr>
+        </table>
+    </div>
+    <script src="../jquery-3.5.0.min.js"></script>
+    <script>
+        let score = 0
+        let timeleft = 30
+        let timer = 0
+        // 怪流水號
+        let monsterid = 0
+        let monsterid2 = 0
+        let monsterid3 = 0
+
+        const rand = (num) => {
+            return Math.floor(Math.random() * num)
+        }
+        const rand2 = (num2) => {
+            return Math.floor(Math.random() * num2)
+        }
+        const rand3 = (num3) => {
+            return Math.floor(Math.random() * num3)
+        }
+        // 怪位移
+        const movemonster = (monsterid) => {
+            $(`#mo${monsterid}`).animate({
+                top: rand(60) + "%",
+                left: rand(60) + "%",
+                width: rand(30) + "%"
+            }, 3000, function () {
+                movemonster(monsterid)
+            })
+        }
+        const movemonster2 = (monsterid2) => {
+            $(`#mo2${monsterid2}`).animate({
+                top: rand(60) + "%",
+                left: rand(60) + "%",
+                width: rand(30) + "%"
+            }, 3000, function () {
+                movemonster2(monsterid2)
+            })
+        }
+        const movemonster3 = (monsterid3) => {
+            $(`#mo3${monsterid3}`).animate({
+                top: rand(60) + "%",
+                left: rand(60) + "%",
+                width: rand(30) + "%"
+            }, 3000, function () {
+                movemonster3(monsterid3)
+            })
+        }
+        // 開始遊戲鍵
+        $("#btn-start").click(function () {
+            $(this).attr("disabled", true)
+            // score = 0
+            // $("#text-score").text(score)
+            // timeleft = 30
+            // $("#text-time").text(timeleft)
+            timer = setInterval(() => {
+                timeleft--
+                $("#text-time").text(timeleft)
+                if (timeleft == 0) {
+                    clearInterval(timer)
+                    $(this).attr("disabled", false)
+                    setTimeout(() => {
+                        alert(`恭喜你得到${score}分`)
+                    }, 100);
+                    $("#game img").remove()
+                }
+                else {
+                    // 隨機出現怪
+                    const num = rand(10)
+                    const num2 = rand(10)
+                    const num3 = rand(10)
+                    if (num > 4) {
+                        $("#game").append(`<img src="./monster1.gif" class = "mo" id = "mo${monsterid}">`)
+                        $(`#mo${monsterid}`).css({
+                            top: rand(70) + "%",
+                            left: rand(70) + "%"
+                        })
+                        movemonster(monsterid)
+                        monsterid++
+                    }
+                    if (num2 > 5) {
+                        $("#game").append(`<img src="./monster2.gif" class = "mo2" id = "mo2${monsterid2}">`)
+                        $(`#mo2${monsterid2}`).css({
+                            top: rand2(70) + "%",
+                            left: rand2(70) + "%"
+                        })
+                        movemonster2(monsterid2)
+                        monsterid2++
+                    }
+                    if (num3 > 7) {
+                        $("#game").append(`<img src="./monster3.gif" class = "mo3" id = "mo3${monsterid3}">`)
+                        $(`#mo3${monsterid3}`).css({
+                            top: rand2(70) + "%",
+                            left: rand2(70) + "%"
+                        })
+                        movemonster3(monsterid3)
+                        monsterid3++
+                    }
+                }
+            }, 1000);
+            // 怪點擊後變得圖片
+            $("#game").on("click", ".mo", function () {
+                $(this).attr("src", "./blood.png");
+                $(this).fadeOut(2500)
+                $(this).stop();
+                $(this).css("pointer-events", "none");
+                score++;
+                $("#text-score").text(score);
+            })
+            $("#game").on("click", ".mo2", function () {
+                $(this).attr("src", "./blood.png");
+                $(this).fadeOut(2500)
+                $(this).stop();
+                $(this).css("pointer-events", "none");
+                score += 2;
+                $("#text-score").text(score);
+            })
+            $("#game").on("click", ".mo3", function () {
+                $(this).attr("src", "./blood.png");
+                $(this).fadeOut(2500)
+                $(this).stop();
+                $(this).css("pointer-events", "none");
+                score--;
+                $("#text-score").text(score);
+            })
+        })
+    </script>
+</body>
+
+</html>
